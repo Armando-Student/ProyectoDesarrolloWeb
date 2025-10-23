@@ -47,13 +47,15 @@ app.options('*', cors());
 
 // ==================== CONEXIÓN BASE DE DATOS ====================
 const db = mysql.createConnection({
-    host: process.env.MYSQLHOST || 'localhost',
-    user: process.env.MYSQLUSER || 'root',
-    password: process.env.MYSQLPASSWORD || '',
-    database: process.env.MYSQLDATABASE || 'crypto_platform',
-    port: process.env.MYSQLPORT || 3306,
-    connectTimeout: 60000,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    ssl: {
+        rejectUnauthorized: false  // Aiven requiere SSL
+    },
+    connectTimeout: 60000
 });
 
 // Conectar a la base de datos
