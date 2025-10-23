@@ -6,17 +6,54 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Middleware para parsear JSON
 app.use(express.json());
-app.use(cors());
 
-// Conexión a la base de datos MySQL
+// ==================== CONFIGURACIÓN CORS ====================
+const allowedOrigins = [
+    'https://el-frontend.com', // Frontend
+    'http://localhost:3000',   // React dev server
+    'http://localhost:8080',   // Vue dev server  
+    'http://localhost:5500',   // Live server
+    'https://tu-app.railway.app' //URL de Railway
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Permitir requests sin origin (Postman, mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+        
+        // En desarrollo, ser más permisivo
+        if (process.env.NODE_ENV !== 'production') {
+            console.log('✅ CORS allowing origin:', origin);
+            return callback(null, true);
+        }
+        
+        // En producción, validar contra la lista
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('❌ CORS blocking origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Manejar preflight requests
+app.options('*', cors());
+
+// ==================== CONEXIÓN BASE DE DATOS ====================
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '***',
-    database: 'crypto_platform',
-    connectTimeout: 60000
+    host: process.env.MYSQLHOST || 'localhost',
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASSWORD || '',
+    database: process.env.MYSQLDATABASE || 'crypto_platform',
+    port: process.env.MYSQLPORT || 3306,
+    connectTimeout: 60000,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
 // Conectar a la base de datos
