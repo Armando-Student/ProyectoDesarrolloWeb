@@ -1,4 +1,4 @@
-*const express = require('express');
+const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -10,14 +10,6 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // ==================== CONFIGURACIÓN CORS ====================
-const allowedOrigins = [
-    'https://el-frontend.com', // Frontend
-    'http://localhost:3000',   // React dev server
-    'http://localhost:8080',   // Vue dev server  
-    'http://localhost:5500',   // Live server
-    'https://tu-app.railway.app' //URL de Railway
-];
-
 app.use(cors({
     origin: function (origin, callback) {
         // Permitir requests sin origin (Postman, mobile apps, curl, etc.)
@@ -25,17 +17,13 @@ app.use(cors({
         
         // En desarrollo, ser más permisivo
         if (process.env.NODE_ENV !== 'production') {
-            console.log('✅ CORS allowing origin:', origin);
+            console.log('✅ CORS allowing origin (dev):', origin);
             return callback(null, true);
         }
         
-        // En producción, validar contra la lista
-        if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.log('❌ CORS blocking origin:', origin);
-            callback(new Error('Not allowed by CORS'));
-        }
+        // En producción, también permitir cualquier origen
+        console.log('✅ CORS allowing origin (production):', origin);
+        return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
