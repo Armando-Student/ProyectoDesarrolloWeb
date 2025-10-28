@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const cors = require('cors'); // ← Asegúrate de tener esto
+const cors = require('cors');  // ← ESTA LÍNEA DEBE ESTAR
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -11,13 +11,13 @@ app.use(express.json());
 
 // ==================== CONFIGURACIÓN CORS ====================
 app.use(cors({
-    origin: true, // Permitir cualquier origen
+    origin: '*',  // ← PERMITIR TODOS LOS ORÍGENES
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Manejar preflight requests explícitamente
+// Manejar preflight requests
 app.options('*', cors());
 
 // ==================== CONEXIÓN BASE DE DATOS ====================
