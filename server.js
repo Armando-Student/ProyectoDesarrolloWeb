@@ -2,61 +2,36 @@ const express = require('express');
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const cors = require('cors');
+const cors = require('cors'); // ← Asegúrate de tener esto
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware para parsear JSON
+// Middleware
 app.use(express.json());
 
 // ==================== CONFIGURACIÓN CORS ====================
-const allowedOrigins = [
-    'https://el-frontend.com', // Frontend
-    'http://localhost:3000',   // React dev server
-    'http://localhost:8080',   // Vue dev server  
-    'http://localhost:5500',   // Live server
-    'https://tu-app.railway.app' //URL de Railway
-];
-
 app.use(cors({
-    origin: function (origin, callback) {
-        // Permitir requests sin origin (Postman, mobile apps, curl, etc.)
-        if (!origin) return callback(null, true);
-        
-        // En desarrollo, ser más permisivo
-        if (process.env.NODE_ENV !== 'production') {
-            console.log('✅ CORS allowing origin:', origin);
-            return callback(null, true);
-        }
-        
-        // En producción, validar contra la lista
-        if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.log('❌ CORS blocking origin:', origin);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: true, // Permitir cualquier origen
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Manejar preflight requests
+// Manejar preflight requests explícitamente
 app.options('*', cors());
 
 // ==================== CONEXIÓN BASE DE DATOS ====================
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    ssl: {
-        rejectUnauthorized: false  // Aiven requiere SSL
-    },
-    connectTimeout: 60000
+    host: process.env.MYSQLHOST || 'localhost',
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASSWORD || '',
+    database: process.env.MYSQLDATABASE || 'crypto_platform',
+    port: process.env.MYSQLPORT || 3306,
+    connectTimeout: 60000,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
+
+// ... el resto de tu código
 
 // Conectar a la base de datos
 db.connect((err) => {
