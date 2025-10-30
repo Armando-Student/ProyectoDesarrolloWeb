@@ -276,7 +276,7 @@ app.post('/api/transaction/buy', authenticateToken, (req, res) => {
 
             const newBalance = userBalance - totalCost;
             const updateUser = 'UPDATE users SET balance = ? WHERE id = ?';
-            const insertTransaction = 'INSERT INTO transactions (user_id, crypto_id, type, amount, price, total) VALUES (?, ?, "buy", ?, ?, ?)';
+            const insertTransaction = 'INSERT INTO transactions (user_id, crypto_id, type, amount, price, total) VALUES (?, ?, buy ?, ?, ?)';
 
             db.beginTransaction(err => {
                 if (err) return res.status(500).json({ error: err.message });
