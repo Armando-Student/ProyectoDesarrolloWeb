@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vender Criptomonedas - CriptoSim</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>🪙 CriptoSim</h2>
+        </div>
+        <div class="nav-links">
+            <span id="userWelcome" class="user-welcome">Bienvenido</span>
+            <a href="dashboard.html" class="btn-login">Dashboard</a>
+            <a href="comprar.html" class="btn-login">Comprar</a>
+            <a href="historial.html" class="btn-login">Historial</a>
+            <a href="#" id="logoutBtn" class="btn-register">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Venta Content -->
+    <div class="trade-container">
+        <div class="trade-header">
+            <h1>Vender Criptomonedas</h1>
+            <a href="dashboard.html" class="btn-back">← Volver al Dashboard</a>
+        </div>
+
+        <div class="trade-content">
+            <!-- Información de la Criptomoneda -->
+            <div class="crypto-info-card" id="cryptoInfo">
+                <div class="crypto-header">
+                    <div class="crypto-icon">💵</div>
+                    <div class="crypto-details">
+                        <h3 id="cryptoName">Selecciona una criptomoneda</h3>
+                        <p id="cryptoPrice">Precio: $0.00</p>
+                    </div>
+                </div>
+                <div class="crypto-stats">
+                    <div class="stat">
+                        <span>Disponible en portafolio:</span>
+                        <span id="availableCrypto">0.0000</span>
+                    </div>
+                    <div class="stat">
+                        <span>Valor actual:</span>
+                        <span id="currentValue">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de Venta -->
+            <div class="trade-form">
+                <h3>Realizar Venta</h3>
+                <form id="sellForm">
+                    <div class="form-group">
+                        <label for="cryptoSelect">Criptomoneda:</label>
+                        <select id="cryptoSelect" required>
+                            <option value="">Selecciona una criptomoneda</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amountType">Vender por:</label>
+                        <select id="amountType">
+                            <option value="crypto">Cantidad en Crypto</option>
+                            <option value="fiat">Monto en USD</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount" id="amountLabel">Cantidad:</label>
+                        <input type="number" id="amount" step="0.0001" min="0" placeholder="0.00" required>
+                        <span class="input-symbol" id="amountSymbol">BTC</span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-percentage" data-percentage="25">25%</button>
+                        <button type="button" class="btn-percentage" data-percentage="50">50%</button>
+                        <button type="button" class="btn-percentage" data-percentage="75">75%</button>
+                        <button type="button" class="btn-percentage" data-percentage="100">100%</button>
+                    </div>
+
+                    <div class="calculation-results">
+                        <div class="calc-item">
+                            <span>Total a recibir:</span>
+                            <span id="totalReceive">$0.00</span>
+                        </div>
+                        <div class="calc-item">
+                            <span>Comisión (0.1%):</span>
+                            <span id="feeAmount">$0.00</span>
+                        </div>
+                        <div class="calc-item total">
+                            <span>Total final:</span>
+                            <span id="finalTotal">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="window.location.href='dashboard.html'">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-primary btn-sell" id="sellButton">
+                            Confirmar Venta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/vender.js"></script>
+</body>
+</html>

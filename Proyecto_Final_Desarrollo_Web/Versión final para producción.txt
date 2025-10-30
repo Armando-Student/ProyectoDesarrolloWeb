@@ -1,0 +1,23 @@
+// Versión final para producción
+function realLogin(email, password) {
+    fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Login exitoso
+            showAlert('¡Bienvenido!', 'success');
+            // Redirigir...
+        } else {
+            // ❌ MAL: "Usuario no encontrado" o "Contraseña incorrecta"
+            // ✅ BIEN: "Credenciales inválidas"
+            showAlert('Credenciales inválidas', 'error');
+        }
+    })
+    .catch(error => {
+        showAlert('Error del servidor', 'error');
+    });
+}

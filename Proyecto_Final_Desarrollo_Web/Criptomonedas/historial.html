@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Transacciones - CriptoSim</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>🪙 CriptoSim</h2>
+        </div>
+        <div class="nav-links">
+            <span id="userWelcome" class="user-welcome"></span>
+            <a href="dashboard.html" class="btn-login">Dashboard</a>
+            <a href="comprar.html" class="btn-login">Comprar</a>
+            <a href="vender.html" class="btn-login">Vender</a>
+            <a href="#" id="logoutBtn" class="btn-register">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Historial Content -->
+    <div class="historial-container">
+        <div class="historial-header">
+            <h1>Historial de Transacciones</h1>
+            <div class="historial-stats">
+                <div class="stat-card">
+                    <h3>Total Compras</h3>
+                    <p id="totalCompras">$0.00</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Ventas</h3>
+                    <p id="totalVentas">$0.00</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Transacciones</h3>
+                    <p id="totalTransacciones">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filtros-section">
+            <div class="filtros">
+                <select id="filterType" class="filter-select">
+                    <option value="all">Todas las transacciones</option>
+                    <option value="buy">Solo compras</option>
+                    <option value="sell">Solo ventas</option>
+                </select>
+                
+                <select id="filterCrypto" class="filter-select">
+                    <option value="all">Todas las criptomonedas</option>
+                    <option value="Bitcoin">Bitcoin</option>
+                    <option value="Ethereum">Ethereum</option>
+                    <option value="Dogecoin">Dogecoin</option>
+                </select>
+
+                <input type="date" id="filterDate" class="filter-date">
+                
+                <button id="clearFilters" class="btn-secondary">Limpiar Filtros</button>
+            </div>
+        </div>
+
+        <!-- Lista de Transacciones -->
+        <div class="transactions-section">
+            <div class="transactions-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Criptomoneda</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsTable">
+                        <!-- Las transacciones se cargarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mensaje cuando no hay transacciones -->
+            <div id="noTransactions" class="no-transactions" style="display: none;">
+                <div class="empty-state">
+                    <h3>No hay transacciones registradas</h3>
+                    <p>Realiza tu primera compra o venta para ver tu historial aquí</p>
+                    <a href="comprar.html" class="btn-primary">Comenzar a Comprar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/historial.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CriptoSim</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>🪙 CriptoSim</h2>
+        </div>
+        <div class="nav-links">
+            <span id="userWelcome" class="user-welcome">Bienvenido</span>
+            <a href="comprar.html" class="btn-login">Comprar</a>
+            <a href="vender.html" class="btn-login">Vender</a>
+            <a href="historial.html" class="btn-login">Historial</a>
+            <a href="#" id="logoutBtn" class="btn-register">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <h1>Mi Portafolio</h1>
+                <p class="user-name" id="userWelcome">Bienvenido</p>
+            </div>
+            <div class="balance-card">
+                <h3>Saldo Disponible</h3>
+                <p class="balance-amount" id="currentBalance">$0.00</p>
+            </div>
+        </div>
+
+        <!-- Criptomonedas Disponibles -->
+        <section class="market-section">
+            <div class="section-header">
+                <h2>Mercado de Criptomonedas</h2>
+                <button id="refreshBtn" class="btn-refresh">🔄 Actualizar</button>
+            </div>
+            <div id="marketGrid" class="market-grid">
+                <!-- Las criptomonedas se cargarán con JavaScript -->
+            </div>
+            <div id="marketLoading" class="loading-message" style="display: none;">
+                Cargando datos del mercado...
+            </div>
+        </section>
+
+        <!-- Portafolio del Usuario -->
+        <section class="portfolio-section">
+                <div class="section-header">
+                    <h2>Mi Portafolio</h2>
+                    <div id="portfolioValue" class="portfolio-value">Total: $0.00</div>
+                </div>
+                <div class="portfolio-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Criptomoneda</th>
+                                <th>Cantidad</th>
+                                <th>Precio Actual</th>
+                                <th>Valor Total</th>
+                                <th>Cambio 24h</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolioTable">
+                            <!-- Los datos del portafolio se cargarán con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+        </section>
+
+        <!-- Transacciones Recientes -->
+        <section class="recent-transactions">
+            <h2>Transacciones Recientes</h2>
+            <div class="transactions-list" id="recentTransactions">
+                <!-- Las transacciones se cargarán con JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

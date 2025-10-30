@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        input, button { padding: 10px; margin: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: #f5f5f5; padding: 10px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>🐛 Debug de API Railway</h1>
+    
+    <div class="test">
+        <h3>1. Probar Endpoint Base</h3>
+        <button onclick="testBase()">Probar /api</button>
+        <div id="baseResult"></div>
+    </div>
+
+    <div class="test">
+        <h3>2. Probar Login</h3>
+        <input type="email" id="email" placeholder="Email" value="test@test.com">
+        <input type="password" id="password" placeholder="Password" value="123456">
+        <button onclick="testLogin()">Probar Login</button>
+        <div id="loginResult"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'https://proyectodesarrolloweb-production.up.railway.app';
+
+        async function testBase() {
+            const resultDiv = document.getElementById('baseResult');
+            resultDiv.innerHTML = '🔄 Probando...';
+            
+            try {
+                const response = await fetch(BASE_URL + '/api');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <p><strong>Status:</strong> ${response.status} ${response.ok ? '✅' : '❌'}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('loginResult');
+            
+            resultDiv.innerHTML = '🔄 Probando login...';
+            
+            try {
+                const response = await fetch(BASE_URL + '/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <p><strong>Status:</strong> ${response.status} ${response.ok ? '✅' : '❌'}</p>
+                    <p><strong>Response OK:</strong> ${response.ok}</p>
+                    <h4>Datos recibidos:</h4>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

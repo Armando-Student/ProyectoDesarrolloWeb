@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - CriptoSim</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h2>🪙 CriptoSim - Admin</h2>
+        </div>
+        <div class="nav-links">
+            <span id="userWelcome" class="user-welcome"></span>
+            <a href="dashboard.html" class="btn-login">Volver al Dashboard</a>
+            <a href="#" id="logoutBtn" class="btn-register">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Admin Content -->
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>Panel de Administración</h1>
+            <p>Gestión de usuarios y reportes del sistema</p>
+        </div>
+
+        <!-- Estadísticas Rápidas -->
+        <div class="admin-stats">
+            <div class="admin-stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <h3>Total Usuarios</h3>
+                    <p id="totalUsers">0</p>
+                </div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-info">
+                    <h3>Transacciones Totales</h3>
+                    <p id="totalTransactions">0</p>
+                </div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-info">
+                    <h3>Volumen Total</h3>
+                    <p id="totalVolume">$0.00</p>
+                </div>
+            </div>
+            <div class="admin-stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-info">
+                    <h3>Usuarios Activos</h3>
+                    <p id="activeUsers">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secciones del Panel -->
+        <div class="admin-sections">
+            <!-- Gestión de Usuarios -->
+            <section class="admin-section">
+                <h2>Gestión de Usuarios</h2>
+                <div class="section-content">
+                    <div class="users-table-container">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Email</th>
+                                    <th>Saldo</th>
+                                    <th>Fecha Registro</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable">
+                                <!-- Los usuarios se cargarán con JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reportes de Transacciones -->
+            <section class="admin-section">
+                <h2>Reportes de Transacciones</h2>
+                <div class="section-content">
+                    <div class="reports-grid">
+                        <div class="report-card">
+                            <h3>Criptomoneda Más Comprada</h3>
+                            <div class="report-result" id="mostBoughtCrypto">-</div>
+                        </div>
+                        <div class="report-card">
+                            <h3>Criptomoneda Más Vendida</h3>
+                            <div class="report-result" id="mostSoldCrypto">-</div>
+                        </div>
+                        <div class="report-card">
+                            <h3>Usuario Más Activo</h3>
+                            <div class="report-result" id="mostActiveUser">-</div>
+                        </div>
+                        <div class="report-card">
+                            <h3>Transacción Más Grande</h3>
+                            <div class="report-result" id="largestTransaction">-</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gráficos (Opcional) -->
+            <section class="admin-section">
+                <h2>Estadísticas Visuales</h2>
+                <div class="section-content">
+                    <div class="charts-container">
+                        <div class="chart-placeholder">
+                            <h4>Distribución de Transacciones por Criptomoneda</h4>
+                            <p>📊 Gráfico mostraría aquí con Chart.js</p>
+                            <small>Para implementar con librerías como Chart.js</small>
+                        </div>
+                        <div class="chart-placeholder">
+                            <h4>Actividad de Usuarios</h4>
+                            <p>📈 Gráfico de líneas mostraría tendencias</p>
+                            <small>Para implementar con librerías como Chart.js</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
