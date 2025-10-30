@@ -323,67 +323,75 @@ app.post('/api/transaction/sell', authenticateToken, (req, res) => {
         return res.status(400).json({ error: 'Datos inválidos' });
     }
 
-    const portfolioQuery = `
-        SELECT 
-            c.id,
-            c.symbol, 
-            c.name, 
-            c.current_price,
-            SUM(CASE WHEN t.type = 'buy' THEN t.amount ELSE -t.amount END) as owned_amount
-        FROM transactions t
-        JOIN cryptocurrencies c ON t.crypto_id = c.id
-        WHERE t.user_id = ? AND t.crypto_id = ?
-        GROUP BY c.id
+    // 1. Verificar que el usuario tenga suficiente cantidad de esa cripto
+    const userCryptoQuery = `
+        SELECT SUM(CASE WHEN type = 'buy' THEN amount ELSE -amount END) as total_amount
+        FROM transactions 
+        WHERE user_id = ? AND crypto_id = ?
     `;
-
-    db.query(portfolioQuery, [user_id, crypto_id], (err, results) => {
+    
+    db.query(userCryptoQuery, [user_id, crypto_id], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (results.length === 0 || results[0].owned_amount < amount) {
-            return res.status(400).json({ error: 'No tienes suficiente cantidad de esta criptomoneda' });
+        
+        const userCryptoBalance = parseFloat(results[0].total_amount) || 0;
+        if (userCryptoBalance < amount) {
+            return res.status(400).json({ error: 'Cantidad insuficiente de criptomoneda' });
         }
 
-        const crypto = results[0];
-        const totalValue = amount * crypto.current_price;
-
-        const updateUser = 'UPDATE users SET balance = balance + ? WHERE id = ?';
-        const insertTransaction = 'INSERT INTO transactions (user_id, crypto_id, type, amount, price, total) VALUES (?, ?, "sell", ?, ?, ?)';
-
-        db.beginTransaction(err => {
+        // 2. Obtener precio actual de la cripto
+        const cryptoQuery = 'SELECT * FROM cryptocurrencies WHERE id = ?';
+        db.query(cryptoQuery, [crypto_id], (err, cryptoResults) => {
             if (err) return res.status(500).json({ error: err.message });
+            if (cryptoResults.length === 0) return res.status(404).json({ error: 'Criptomoneda no encontrada' });
 
-            db.query(updateUser, [totalValue, user_id], (err) => {
-                if (err) {
-                    return db.rollback(() => {
-                        res.status(500).json({ error: err.message });
-                    });
-                }
+            const crypto = cryptoResults[0];
+            const totalEarned = amount * crypto.current_price;
 
-                db.query(insertTransaction, [user_id, crypto_id, amount, crypto.current_price, totalValue], (err, result) => {
-                    if (err) {
-                        return db.rollback(() => {
-                            res.status(500).json({ error: err.message });
-                        });
-                    }
+            // 3. Obtener balance actual del usuario
+            const userQuery = 'SELECT balance FROM users WHERE id = ?';
+            db.query(userQuery, [user_id], (err, userResults) => {
+                if (err) return res.status(500).json({ error: err.message });
+                if (userResults.length === 0) return res.status(404).json({ error: 'Usuario no encontrado' });
 
-                    db.commit(err => {
+                const userBalance = parseFloat(userResults[0].balance);
+                const newBalance = userBalance + totalEarned;
+
+                const updateUser = 'UPDATE users SET balance = ? WHERE id = ?';
+                
+                // ✅ Usar parámetro para 'sell'
+                const insertTransaction = 'INSERT INTO transactions (user_id, crypto_id, type, amount, price, total) VALUES (?, ?, ?, ?, ?, ?)';
+
+                db.beginTransaction(err => {
+                    if (err) return res.status(500).json({ error: err.message });
+
+                    db.query(updateUser, [newBalance, user_id], (err) => {
                         if (err) {
                             return db.rollback(() => {
                                 res.status(500).json({ error: err.message });
                             });
                         }
 
-                        db.query('SELECT balance FROM users WHERE id = ?', [user_id], (err, balanceResults) => {
+                        // ✅ Insertar transacción de venta
+                        db.query(insertTransaction, [user_id, crypto_id, "sell", amount, crypto.current_price, totalEarned], (err, result) => {
                             if (err) {
-                                return res.json({
-                                    message: 'Venta realizada exitosamente',
-                                    transaction_id: result.insertId
+                                return db.rollback(() => {
+                                    res.status(500).json({ error: err.message });
                                 });
                             }
 
-                            res.json({
-                                message: 'Venta realizada exitosamente',
-                                new_balance: balanceResults[0].balance,
-                                transaction_id: result.insertId
+                            db.commit(err => {
+                                if (err) {
+                                    return db.rollback(() => {
+                                        res.status(500).json({ error: err.message });
+                                    });
+                                }
+
+                                res.json({
+                                    message: 'Venta realizada exitosamente',
+                                    new_balance: newBalance,
+                                    total_earned: totalEarned,
+                                    transaction_id: result.insertId
+                                });
                             });
                         });
                     });
@@ -392,7 +400,6 @@ app.post('/api/transaction/sell', authenticateToken, (req, res) => {
         });
     });
 });
-
 // ==================== MANEJO DE RUTAS NO ENCONTRADAS ====================
 
 // FORMA CORRECTA - Manejo de rutas no encontradas
